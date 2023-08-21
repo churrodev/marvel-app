@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import TheCharacters from '../components/TheCharacters.vue';
+  import TheCharacters from '../series/TheCharacters.vue';
 </script>
 
 <template>

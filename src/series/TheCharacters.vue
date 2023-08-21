@@ -1,11 +1,12 @@
 <script setup lang="ts">
     import CharactersList from './CharactersList.vue';
+    import SearchCharacter from './SearchCharacter.vue';
+    
 </script>
 
 <template>
     <div>
-        <h1>The Characters</h1>
-
+        <SearchCharacter />
         <CharactersList />
     </div>
 </template>
