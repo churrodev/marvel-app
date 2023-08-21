@@ -13,20 +13,48 @@
 </script>
 
 <template>
-  <div class="cards-container">
-      <div v-for="favorite in favorites" :key="favorite.id" class="card">
-        <img :src="`${favorite.thumbnail.path}.${favorite.thumbnail.extension}`" alt="Imagen de la serie" class="card-image" />
-        <h3 class="card-title">{{ favorite.title }}</h3>
-        <p class="card-description">{{ favorite.title || 'No description listed for this series.' }}</p>
-        <div class="card-button">
-          <p v-if="favorite.description" class="card-description">{{ favorite.description }}</p>
-          <p v-else class="card-description no-description">No hay descripción disponible.</p>
-        </div>
+  <button 
+    @click="toggleView"
+    class="toggle"
+    >
+    <span class="icon"></span>
+    {{ isListView ? 'View as card' : 'View as list' }}
+  </button>
+  <div :class="isListView ? 'list-container' : 'cards-container'">
+    <div v-for="favorite in favorites" :key="favorite.id" class="item">
+      <img :src="`${favorite.thumbnail.path}.${favorite.thumbnail.extension}`" alt="Imagen de la serie" class="item-image" />
+      <h3 class="item-title">{{ favorite.title }}</h3>
+      <p class="item-description">{{ favorite.description || 'No description listed for this series.' }}</p>
+      <div class="item-button">
+        <p v-if="favorite.description" class="item-description">{{ favorite.description }}</p>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.toggle {
+  margin: 10px;
+}
+
+.toggle {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.3s;
+}
+
+.toggle:hover {
+  background-color: #0056b3;
+}
+
 
 .cards-container {
   display: flex;
@@ -149,5 +177,64 @@
   .card {
     width: calc(100% - 20px);
   }
+}
+
+/* Clases comunes para tarjetas y lista */
+.item {
+  box-sizing: border-box;
+  border-radius: 5px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.item-image {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 5px;
+  display: block;
+}
+
+.item-title {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.item-description {
+  font-size: 14px;
+}
+
+.list-container {
+  width: 100%;
+}
+
+.list-container .item {
+  border: 1px solid #ccc;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  padding: 10px;
+  width: calc(100% - 20px);
+  flex-direction: row;
+  align-items: center;
+}
+
+.list-container .item-image {
+  width: 100px;
+  height: 150px;
+}
+
+/* Vista de tarjetas */
+.cards-container .item {
+  border: 1px solid #ccc;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  padding: 10px;
+  width: calc(25% - 20px);
+  align-items: center;
+  text-align: center;
+}
+
+.card-title {
+  text-align: center;
 }
 </style>
