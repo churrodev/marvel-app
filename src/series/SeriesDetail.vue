@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { useSeriesDetailStore } from '../stores/seriesDetail';
   import { useFavoritesStore } from '../stores/favoritesStore';
-  import { onMounted, ref, watch } from 'vue';
+  import { onMounted, ref, watch, computed } from 'vue';
   import { useRoute } from 'vue-router';
   import TheAlerts from '../components/TheAlerts.vue';
 
@@ -48,6 +48,18 @@
   const id = parseInt(route.params.id as string, 10);
   const isFavorite = ref(favoritesStore.isFavorite(id));
 
+  const isImageLoading = ref(true);
+
+  const seriesImage = computed(() => {
+    return seriesDetailStore.seriesDetail && seriesDetailStore.seriesDetail.thumbnail 
+      ? `${seriesDetailStore.seriesDetail.thumbnail.path}.${seriesDetailStore.seriesDetail.thumbnail.extension}` 
+      : '';
+  });
+
+  const onImageLoad = () => {
+    isImageLoading.value = false;
+  };
+
   onMounted(() => {
     const id = parseInt(route.params.id as string, 10);
     seriesDetailStore.fetchSeriesDetail(id);
@@ -59,7 +71,8 @@
   <div class="series-detail">
     <h1>{{ seriesDetailStore.seriesDetail.title }}</h1>
     <div class="content">
-      <img :src="seriesDetailStore.seriesDetail && seriesDetailStore.seriesDetail.thumbnail ? `${seriesDetailStore.seriesDetail.thumbnail.path}.${seriesDetailStore.seriesDetail.thumbnail.extension}` : 'path/to/your/random/image.png'" alt="Image" class="series-image" />
+      <img :src="seriesImage" alt="" :class="['series-image', { 'skeleton': isImageLoading }]" @load="onImageLoad" />
+      
       <div class="info">
         <p>Tipo: {{ seriesDetailStore.seriesDetail.type }}</p>
         <p>Años: {{ seriesDetailStore.seriesDetail.startYear }} - {{ seriesDetailStore.seriesDetail.endYear }}</p>
@@ -100,6 +113,30 @@
 </template>
 
 <style scoped>
+
+.series-image.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  opacity: 0.7;
+}
+
+.series-image {
+  transition: opacity 0.3s;
+}
+
+.series-image, .series-image.skeleton {
+  width: 500px;
+  height: 450px;
+  display: block;
+}
+
+
+@keyframes loading {
+   0% { background-position: 200% 0; }
+   100% { background-position: -200% 0; }
+}
+
 
 .toast-center {
   display: flex;
